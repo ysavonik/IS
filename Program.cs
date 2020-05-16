@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Linq;
 
 public class Program
 {
@@ -25,6 +26,8 @@ public class Program
 
         Random r = new Random();
         Console.WriteLine("Hello. How are you?");
+        string[] bot_words = "Hello. How are you?".Split(' ');
+        string[] prev_words = { };
         for (; ; )
         {
             string s = Console.ReadLine();
@@ -32,10 +35,38 @@ public class Program
                 Console.WriteLine("Why you wrote nothing??");
             else
             {
-                string[] next = s.Contains("?") ? answers : questions;
-                Console.WriteLine(next[r.Next(next.Length)]);
-            }
+                Console.WriteLine("[{0}]", string.Join(", ", bot_words));
+                
+                //Console.WriteLine(prev_words);
+                //Console.WriteLine(next[r.Next(next.Length)]);
 
+
+                if (s.Contains("?") && bot_words.Any(s1 => s.Contains(s1)))
+                {
+                    string[] next = questions;
+                    string ph = next[r.Next(next.Length)];
+                    Console.WriteLine(ph);
+                    bot_words = ph.Split(' ');
+                }
+                else
+                {
+                    if (!s.Contains("?") && bot_words.Any(s1 => s.Contains(s1)))
+                    {
+                        string[] next = answers;
+                        string ph = next[r.Next(next.Length)];
+                        Console.WriteLine(ph);
+                        bot_words = ph.Split(' ');
+                    }
+                    else
+                    {
+                        string[] next = s.Contains("?") ? answers : questions;
+                        string ph = next[r.Next(next.Length)];
+                        Console.WriteLine(ph);
+                        bot_words = ph.Split(' ');
+                    }
+                }
+            }
+            prev_words = s.Split(' ');
         }
     }
 }
